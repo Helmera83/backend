@@ -11,7 +11,7 @@ DEFAULT_FEEDS = [
     {"id": 10, "url": "https://www.oudaily.com/feed/", "title": "The Oklahoma Daily"},
     {"id": 11, "url": "https://www.tulsaworld.com/feed/", "title": "Tulsa World"},
     {"id": 12, "url": "https://www.nondoc.com/feed/", "title": "NonDoc"},
-    {"id": 13, "url": "https://www.https://feeds.texastribune.org/feeds/main/", "title": "The Texas Tribune"},
+    {"id": 13, "url": "https://feeds.texastribune.org/feeds/main/", "title": "The Texas Tribune"},
     {"id": 14, "url": "https://www.star-telegram.com/news/local/?widgetName=rssfeed&widgetId=1158999&getXmlFeed=true", "title": "Fort Worth Star-Telegram"},
     {"id": 15, "url": "https://www.spectrumlocalnews.com/tx/dallas-fort-worth/rss", "title": "Spectrum News 1 Dallas-Fort Worth"}
 ]
