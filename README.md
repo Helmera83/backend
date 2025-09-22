@@ -1,4 +1,4 @@
-# gnews-ok-api
+# backend API
 
 A FastAPI backend for filtered Oklahoma & North Texas news with topic and image support.
 
