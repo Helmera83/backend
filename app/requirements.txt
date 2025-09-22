@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+feedparser
+sqlalchemy
+pydantic
+aiosqlite
+beautifulsoup4
+typing
