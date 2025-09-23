@@ -31,6 +31,7 @@ MANIFEST
 *.db
 *.sqlite
 *.sqlite3
+app/data/
 
 # Node.js (for frontend)
 node_modules/
