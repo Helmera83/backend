@@ -4,7 +4,7 @@ import feedparser
 from typing import List
 from .database import get_db, engine, Base
 from .models import Feed, FeedItem
-from .schemas import FeedCreate, FeedOut, FeedItemOut
+from .schemas import FeedCreate, FeedOut, FeedItemOut, FeedItemUpdate
 from .keywords import KEYWORDS, LOCATION_KEYWORDS
 from .load_default_feeds import load_default_feeds
 from bs4 import BeautifulSoup
@@ -16,7 +16,7 @@ app = FastAPI(title="RSS Reader Backend (OK & N. Texas Filtered)")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:3001"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -109,3 +109,44 @@ def refresh_feed(feed_id: int, db: Session = Depends(get_db)):
 @app.get("/feeds/{feed_id}/items", response_model=List[FeedItemOut])
 def get_feed_items(feed_id: int, db: Session = Depends(get_db)):
     return db.query(FeedItem).filter(FeedItem.feed_id == feed_id).order_by(FeedItem.published.desc()).all()
+
+@app.get("/articles", response_model=List[FeedItemOut])
+def get_all_articles(db: Session = Depends(get_db)):
+    """Get all articles from all feeds"""
+    return db.query(FeedItem).order_by(FeedItem.published.desc()).all()
+
+@app.patch("/articles/{item_id}", response_model=FeedItemOut)
+def update_article(item_id: int, item_update: FeedItemUpdate, db: Session = Depends(get_db)):
+    """Update article read status"""
+    item = db.query(FeedItem).get(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Article not found")
+    
+    item.is_read = item_update.is_read
+    db.commit()
+    db.refresh(item)
+    return item
+
+@app.post("/articles/{item_id}/mark-read", response_model=FeedItemOut)
+def mark_article_read(item_id: int, db: Session = Depends(get_db)):
+    """Mark article as read"""
+    item = db.query(FeedItem).get(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Article not found")
+    
+    item.is_read = True
+    db.commit()
+    db.refresh(item)
+    return item
+
+@app.post("/articles/{item_id}/mark-unread", response_model=FeedItemOut)
+def mark_article_unread(item_id: int, db: Session = Depends(get_db)):
+    """Mark article as unread"""
+    item = db.query(FeedItem).get(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Article not found")
+    
+    item.is_read = False
+    db.commit()
+    db.refresh(item)
+    return item

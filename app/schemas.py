@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional
 
 class FeedCreate(BaseModel):
@@ -6,14 +6,15 @@ class FeedCreate(BaseModel):
     title: Optional[str] = ""
 
 class FeedOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     url: str
     title: str
 
-    class Config:
-        orm_mode = True
-
 class FeedItemOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: int
     feed_id: int
     title: str
@@ -21,6 +22,7 @@ class FeedItemOut(BaseModel):
     summary: str
     published: str
     image_url: Optional[str] = None
+    is_read: bool = False
 
-    class Config:
-        orm_mode = True
+class FeedItemUpdate(BaseModel):
+    is_read: bool
