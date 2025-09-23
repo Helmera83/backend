@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Boolean
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -20,4 +20,5 @@ class FeedItem(Base):
     summary = Column(Text)
     published = Column(String)
     image_url = Column(String, nullable=True)
+    is_read = Column(Boolean, default=False)
     feed = relationship("Feed", back_populates="items")
