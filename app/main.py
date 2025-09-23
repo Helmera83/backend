@@ -16,11 +16,12 @@ app = FastAPI(title="RSS Reader Backend (OK & N. Texas Filtered)")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Frontend URL(s)
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 @app.on_event("startup")
 def startup_event():
     load_default_feeds()
