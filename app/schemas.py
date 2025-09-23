@@ -11,7 +11,7 @@ class FeedOut(BaseModel):
     title: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class FeedItemOut(BaseModel):
     id: int
@@ -21,6 +21,10 @@ class FeedItemOut(BaseModel):
     summary: str
     published: str
     image_url: Optional[str] = None
+    is_read: bool = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class FeedItemUpdate(BaseModel):
+    is_read: bool

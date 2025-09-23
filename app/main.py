@@ -4,7 +4,7 @@ import feedparser
 from typing import List
 from .database import get_db, engine, Base
 from .models import Feed, FeedItem
-from .schemas import FeedCreate, FeedOut, FeedItemOut
+from .schemas import FeedCreate, FeedOut, FeedItemOut, FeedItemUpdate
 from .keywords import KEYWORDS, LOCATION_KEYWORDS
 from .load_default_feeds import load_default_feeds
 from bs4 import BeautifulSoup
@@ -12,11 +12,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="RSS Reader Backend (OK & N. Texas Filtered)")
+app = FastAPI(title="RSS Reader Backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://127.0.0.1:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -90,7 +90,8 @@ def refresh_feed(feed_id: int, db: Session = Depends(get_db)):
         exists = db.query(FeedItem).filter(FeedItem.link == entry.link, FeedItem.feed_id == feed_id).first()
         title = entry.title
         summary = getattr(entry, "summary", "")
-        if not exists and matches_topics_and_location(title, summary):
+        # For general RSS reader, remove location/topic filtering
+        if not exists:
             image_url = extract_image(entry)
             item = FeedItem(
                 feed_id=feed_id,
@@ -98,7 +99,8 @@ def refresh_feed(feed_id: int, db: Session = Depends(get_db)):
                 link=entry.link,
                 summary=summary,
                 published=getattr(entry, "published", ""),
-                image_url=image_url
+                image_url=image_url,
+                is_read=False
             )
             db.add(item)
             db.commit()
@@ -109,3 +111,17 @@ def refresh_feed(feed_id: int, db: Session = Depends(get_db)):
 @app.get("/feeds/{feed_id}/items", response_model=List[FeedItemOut])
 def get_feed_items(feed_id: int, db: Session = Depends(get_db)):
     return db.query(FeedItem).filter(FeedItem.feed_id == feed_id).order_by(FeedItem.published.desc()).all()
+
+@app.get("/items", response_model=List[FeedItemOut])
+def get_all_items(db: Session = Depends(get_db)):
+    return db.query(FeedItem).order_by(FeedItem.published.desc()).all()
+
+@app.patch("/items/{item_id}", response_model=FeedItemOut)
+def update_item(item_id: int, item_update: FeedItemUpdate, db: Session = Depends(get_db)):
+    item = db.query(FeedItem).get(item_id)
+    if not item:
+        raise HTTPException(status_code=404, detail="Item not found")
+    item.is_read = item_update.is_read
+    db.commit()
+    db.refresh(item)
+    return item
