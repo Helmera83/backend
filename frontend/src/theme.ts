@@ -16,11 +16,11 @@ const lightTheme: ThemeOptions = {
       dark: '#1D192B',
       contrastText: '#FFFFFF',
     },
-    tertiary: {
-      main: '#7D5260',
-      light: '#FFD8E4',
-      dark: '#31111D',
-    },
+    // tertiary: {
+    //   main: '#7D5260',
+    //   light: '#FFD8E4',
+    //   dark: '#31111D',
+    // },
     error: {
       main: '#BA1A1A',
       light: '#FFDAD6',
@@ -179,11 +179,11 @@ const darkTheme: ThemeOptions = {
       dark: '#E8DEF8',
       contrastText: '#1D192B',
     },
-    tertiary: {
-      main: '#EFB8C8',
-      light: '#7D5260',
-      dark: '#FFD8E4',
-    },
+    // tertiary: {
+    //   main: '#EFB8C8',
+    //   light: '#7D5260',
+    //   dark: '#FFD8E4',
+    // },
     error: {
       main: '#FFB4AB',
       light: '#BA1A1A',

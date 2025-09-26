@@ -26,7 +26,8 @@ import { createAppTheme } from './theme';
 import { AppProvider, useApp } from './AppContext';
 import AddFeedDialog from './components/AddFeedDialog';
 import FeedList from './components/FeedList';
-import ArticleList from './components/ArticleList';
+import ArticleGrid from './components/ArticleGrid';
+import TrendingArticles from './components/TrendingArticles';
 
 function AppContent() {
   const { state, actions } = useApp();
@@ -93,7 +94,24 @@ function AppContent() {
           {activeTab === 0 && <FeedList />}
         </Box>
         <Box role="tabpanel" hidden={activeTab !== 1}>
-          {activeTab === 1 && <ArticleList />}
+          {activeTab === 1 && (
+            <Box sx={{ display: 'flex', gap: 3, flexDirection: { xs: 'column', lg: 'row' } }}>
+              {/* Main content area - ArticleGrid */}
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <ArticleGrid />
+              </Box>
+              {/* Sidebar area - TrendingArticles */}
+              <Box 
+                component="aside" 
+                sx={{ 
+                  width: { lg: '300px' },
+                  flexShrink: 0
+                }}
+              >
+                <TrendingArticles />
+              </Box>
+            </Box>
+          )}
         </Box>
       </Container>
 
