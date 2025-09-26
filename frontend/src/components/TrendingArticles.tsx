@@ -97,6 +97,7 @@ const TrendingArticles: React.FC = () => {
                   />
                   <Typography
                     variant="body2"
+                    component="span"
                     sx={{
                       fontSize: '0.875rem',
                       lineHeight: 1.3,
@@ -109,14 +110,14 @@ const TrendingArticles: React.FC = () => {
                 </Box>
               }
               secondary={
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
-                  <Typography variant="caption" color="text.secondary">
+                <>
+                  <Typography variant="caption" color="text.secondary" component="span" sx={{ mr: 2 }}>
                     {article.source}
                   </Typography>
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" color="text.secondary" component="span">
                     {article.views.toLocaleString()} views
                   </Typography>
-                </Box>
+                </>
               }
             />
           </ListItem>
